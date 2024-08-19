@@ -123,17 +123,22 @@ setMethod("ExpVarRasterList", signature(x = "list"),
 )
 
 .getPredMaps <- function(maps) {
-    nms <- names(maps)               
-    ids <- gsubfn::strapply(nms, "[0-9]*\\d")
-    ids <- sapply(ids, function(x) x[1])
-    unique.ids <- unique(ids) 
-    maps2 <- list()
-    for (i in 1:length(unique.ids)) {
-        id <- unique.ids[i]
-        maps2[[i]] <- stack(maps[ids %in% id])
-    }
-    prefix <- strsplit(nms, ids)
-    prefix <- sapply(prefix, function(x) x[1])
-    names(maps2) <- unique(paste0(prefix, ids))
-    maps2
+  nms <- names(maps)               
+  ids <- gsubfn::strapply(nms, "[0-9]*\\d")
+  ids <- sapply(ids, function(x) x[1])
+  unique.ids <- unique(ids) 
+  maps2 <- list()
+  for (i in 1:length(unique.ids)) {
+    id <- unique.ids[i]
+    # Stack the maps
+    stacked_maps <- stack(maps[ids %in% id])
+    # Ensure CRS is preserved
+    crs(stacked_maps) <- crs(maps[[which(ids %in% id)[1]]])
+    maps2[[i]] <- stacked_maps
+  }
+  prefix <- strsplit(nms, ids)
+  prefix <- sapply(prefix, function(x) x[1])
+  names(maps2) <- unique(paste0(prefix, ids))
+  maps2
 }
+
