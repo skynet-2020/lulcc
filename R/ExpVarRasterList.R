@@ -128,20 +128,32 @@ setMethod("ExpVarRasterList", signature(x = "list"),
   ids <- sapply(ids, function(x) x[1])
   unique.ids <- unique(ids) 
   maps2 <- list()
+  
+  print("Entering .getPredMaps function")  # Debugging statement
+  
   for (i in 1:length(unique.ids)) {
     id <- unique.ids[i]
+    print(paste("Processing id:", id))  # Debugging statement
+    
     # Stack the maps
     stacked_maps <- stack(maps[ids %in% id])
-    # Debugging message to check CRS before and after assignment
-    message("CRS before assignment: ", crs(stacked_maps))
+    
+    # Print the CRS of the first map
+    print(paste("CRS before assignment:", crs(maps[[which(ids %in% id)[1]]])))  # Debugging statement
+    
     # Ensure CRS is preserved
     crs(stacked_maps) <- crs(maps[[which(ids %in% id)[1]]])
-    message("CRS after assignment: ", crs(stacked_maps))
+    
+    # Print the CRS after assignment
+    print(paste("CRS after assignment:", crs(stacked_maps)))  # Debugging statement
+    
     maps2[[i]] <- stacked_maps
   }
+  
   prefix <- strsplit(nms, ids)
   prefix <- sapply(prefix, function(x) x[1])
   names(maps2) <- unique(paste0(prefix, ids))
   maps2
 }
+
 
