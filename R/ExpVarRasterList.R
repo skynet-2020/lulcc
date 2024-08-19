@@ -132,8 +132,11 @@ setMethod("ExpVarRasterList", signature(x = "list"),
     id <- unique.ids[i]
     # Stack the maps
     stacked_maps <- stack(maps[ids %in% id])
+    # Debugging message to check CRS before and after assignment
+    message("CRS before assignment: ", crs(stacked_maps))
     # Ensure CRS is preserved
     crs(stacked_maps) <- crs(maps[[which(ids %in% id)[1]]])
+    message("CRS after assignment: ", crs(stacked_maps))
     maps2[[i]] <- stacked_maps
   }
   prefix <- strsplit(nms, ids)
