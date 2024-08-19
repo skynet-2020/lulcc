@@ -51,6 +51,7 @@ NULL
 #'
 
 setGeneric("ExpVarRasterList", function(x, ...)
+  print("ExpVarRasterList function invoked")
            standardGeneric("ExpVarRasterList"))
 
 #' @rdname ExpVarRasterList
